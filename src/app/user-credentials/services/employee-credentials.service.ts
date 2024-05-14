@@ -7,12 +7,26 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class EmployeeCredentialsService {
-  private apiServerUrl = 'http://localhost:8081/user-credentials/employee';
+  private employeeCredentialsServerUrl = 'http://localhost:8081/user-credentials/employee';
+  private employeeRegistrationServerUrl = 'http://localhost:8084/login-registration/employee';
+  private employeeAttributesServerUrl = 'http://localhost/8082/users-attributes/employee'
 
   constructor(private http: HttpClient) { }
 
   // Subscriber functions
   public getAllEmployeeCredentials(): Observable<UserCredentials[]> {
-    return this.http.get<UserCredentials[]>(`${this.apiServerUrl}/list`);
+    return this.http.get<UserCredentials[]>(`${this.employeeCredentialsServerUrl}/list`);
+  }
+
+  public getEmployeeCredentialsById(id: string): Observable<UserCredentials> {
+    return this.http.get<UserCredentials>(`${this.employeeCredentialsServerUrl}/find/id/${id}`);
+  }
+
+  public getEmployeeCredentialsByEmail(email: string): Observable<UserCredentials> {
+    return this.http.get<UserCredentials>(`${this.employeeCredentialsServerUrl}/find/email/${email}`);
+  }
+
+  public deleteEmployeeCredentials(id: string): Observable<any> {
+    return this.http.delete<void>(`${this.employeeCredentialsServerUrl}/delete/${id}`);
   }
 }

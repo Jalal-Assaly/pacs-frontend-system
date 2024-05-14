@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Table } from 'primeng/table';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, forkJoin, throwError } from 'rxjs';
 
 @Component({
   selector: 'employee-credentials',
@@ -13,8 +13,6 @@ import { Observable, catchError, throwError } from 'rxjs';
   // styleUrl: './employee-credentials.component.css'
 })
 export class EmployeeCredentialsComponent {
-
-  employeeCredentialsDialog: boolean = false;
 
   deleteEmployeeCredentialsDialog: boolean = false;
 
@@ -29,8 +27,6 @@ export class EmployeeCredentialsComponent {
   selectedEmployeeCredentials!: UserCredentials[];
 
   cols: any[] = [];
-
-  statuses: any[] = [];
 
   rowsPerPageOptions = [5, 10, 20];
 
@@ -61,28 +57,64 @@ export class EmployeeCredentialsComponent {
     ];
   }
 
-  openNew() {
-    this.employeeCredentials = {} as UserCredentials;
-    this.submitted = false;
-    this.employeeCredentialsDialog = true;
-  }
-  
-  editEmployeeCredentials(employeeCredentials: UserCredentials) {
-    this.employeeCredentials = { ...employeeCredentials };
-    this.employeeCredentialsDialog = true;
-  }
-
-  deleteSelectedEmployeeCredentialsList() {
-    this.deleteEmployeeCredentialsListDialog = true;
-  }
-
   deleteEmployeeCredentials(employeeCredentials: UserCredentials) {
     this.deleteEmployeeCredentialsDialog = true;
     this.employeeCredentials = { ...employeeCredentials };
   }
 
+  deleteSelectedEmployeeCredentials() {
+    this.deleteEmployeeCredentialsListDialog = true;
+  }
+
+  confirmDelete(employeeCredentials: UserCredentials) {
+    this.employeeCredentialsService.deleteEmployeeCredentials(employeeCredentials.ID)
+      .pipe((err) => this.handleObservableError(err))
+      .subscribe({
+        next: () => {
+          this.handleSuccess('Employee Credentials Deleted Successfully');
+          this.employeeCredentialsList = [...this.employeeCredentialsList];
+          this.employeeCredentials = {} as UserCredentials;
+          this.hideDialogs();
+        }
+      });
+  }
+
+  confirmDeleteSelected() {
+    // An array to store the observables for each delete operation
+    const deleteObservables = [];
+
+    // Iterate through the selected coupons and call deleteCoupon for each
+    for (const selecteCredentials of this.selectedEmployeeCredentials) {
+      const deleteObservable = this.employeeCredentialsService.deleteEmployeeCredentials(selecteCredentials.ID!);
+      deleteObservables.push(deleteObservable);
+    }
+
+    // Wait delete operations to complete
+    forkJoin(deleteObservables).subscribe({
+      next: () => {
+        this.employeeCredentialsList = this.employeeCredentialsList.filter(val => !this.selectedEmployeeCredentials.includes(val));
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Successful',
+          detail: 'Coupons Deleted',
+          life: 3000
+        });
+        this.selectedEmployeeCredentials = [];
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete coupons',
+          life: 3000
+        });
+      }
+    });
+
+    this.hideDialogs();
+  }
+
   hideDialogs() {
-    this.employeeCredentialsDialog = false;
     this.submitted = false;
     this.deleteEmployeeCredentialsDialog = false;
     this.deleteEmployeeCredentialsListDialog = false;
