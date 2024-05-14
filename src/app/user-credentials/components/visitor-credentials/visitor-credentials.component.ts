@@ -80,7 +80,7 @@ export class VisitorCredentialsComponent {
     // An array to store the observables for each delete operation
     const deleteObservables = [];
 
-    // Iterate through the selected coupons and call deleteCoupon for each
+    // Iterate through the selected credentials and call deleteVisitorCredentials for each
     for (const selecteCredentials of this.selectedVisitorCredentials) {
       const deleteObservable = this.visitorCredentialsService.deleteVisitorCredentials(selecteCredentials.ID!);
       deleteObservables.push(deleteObservable);
@@ -93,7 +93,7 @@ export class VisitorCredentialsComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
-          detail: 'Coupons Deleted',
+          detail: 'Visitor Credentials Deleted',
           life: 3000
         });
         this.selectedVisitorCredentials = [];
@@ -102,7 +102,7 @@ export class VisitorCredentialsComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to delete coupons',
+          detail: 'Failed to delete visitor credentials',
           life: 3000
         });
       }

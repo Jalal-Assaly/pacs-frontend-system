@@ -39,6 +39,11 @@ export class AppComponent implements OnInit {
         icon: 'pi pi-file',
         routerLink: '/access-policies'
       },
+      {
+        label: 'Visitor Management',
+        icon: 'pi pi-id-card',
+        routerLink: '/visitor-management'
+      }
     ];
   }
 }
