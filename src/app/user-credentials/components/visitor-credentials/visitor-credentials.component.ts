@@ -1,43 +1,43 @@
-import { Component } from '@angular/core';
-import { UserCredentials } from '../../models/user-credentials.model';
-import { EmployeeCredentialsService } from '../../services/employee-credentials.service';
-import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Observable, catchError, forkJoin, throwError } from 'rxjs';
+import { forkJoin, Observable, catchError, throwError } from 'rxjs';
+import { UserCredentials } from '../../models/user-credentials.model';
+import { VisitorCredentialsService } from '../../services/visitor-credentials.service';
 
 @Component({
-  selector: 'employee-credentials',
-  templateUrl: './employee-credentials.component.html',
+  selector: 'visitor-credentials',
+  templateUrl: './visitor-credentials.component.html',
 })
-export class EmployeeCredentialsComponent {
+export class VisitorCredentialsComponent {
 
-  deleteEmployeeCredentialsDialog: boolean = false;
+  deleteVisitorCredentialsDialog: boolean = false;
 
-  deleteEmployeeCredentialsListDialog: boolean = false;
+  deleteVisitorCredentialsListDialog: boolean = false;
 
   submitted: boolean = false;
 
-  employeeCredentialsList!: UserCredentials[];
+  visitorCredentialsList!: UserCredentials[];
 
-  employeeCredentials!: UserCredentials;
+  visitorCredentials!: UserCredentials;
 
-  selectedEmployeeCredentials!: UserCredentials[];
+  selectedVisitorCredentials!: UserCredentials[];
 
   cols: any[] = [];
 
   rowsPerPageOptions = [5, 10, 20];
 
   constructor(
-    private employeeCredentialsService: EmployeeCredentialsService,
+    private visitorCredentialsService: VisitorCredentialsService,
     private messageService: MessageService) { }
 
   ngOnInit() {
-    this.employeeCredentialsService.getAllEmployeeCredentials().subscribe({
+    this.visitorCredentialsService.getAllVisitorCredentials().subscribe({
       next: (response: UserCredentials[]) => {
-        this.employeeCredentialsList = response;
+        this.visitorCredentialsList = response;
         console.log("Works");
-        console.log(this.employeeCredentialsList);
+        console.log(this.visitorCredentialsList);
       },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -45,7 +45,7 @@ export class EmployeeCredentialsComponent {
     });
 
     this.cols = [
-      { field: 'ID', header: 'ID' },
+      { field: 'ID', header: 'ID'},
       { field: 'SSN', header: 'SSN' },
       { field: 'FN', header: 'First Name' },
       { field: 'LN', header: 'Last Name' },
@@ -54,23 +54,23 @@ export class EmployeeCredentialsComponent {
     ];
   }
 
-  deleteEmployeeCredentials(employeeCredentials: UserCredentials) {
-    this.deleteEmployeeCredentialsDialog = true;
-    this.employeeCredentials = { ...employeeCredentials };
+  deleteVisitorCredentials(visitorCredentials: UserCredentials) {
+    this.deleteVisitorCredentialsDialog = true;
+    this.visitorCredentials = { ...visitorCredentials };
   }
 
-  deleteSelectedEmployeeCredentials() {
-    this.deleteEmployeeCredentialsListDialog = true;
+  deleteSelectedVisitorCredentials() {
+    this.deleteVisitorCredentialsListDialog = true;
   }
 
-  confirmDelete(employeeCredentials: UserCredentials) {
-    this.employeeCredentialsService.deleteEmployeeCredentials(employeeCredentials.ID)
+  confirmDelete(visitorCredentials: UserCredentials) {
+    this.visitorCredentialsService.deleteVisitorCredentials(visitorCredentials.ID)
       .pipe((err) => this.handleObservableError(err))
       .subscribe({
         next: () => {
-          this.handleSuccess('Employee Credentials Deleted Successfully');
-          this.employeeCredentialsList = [...this.employeeCredentialsList];
-          this.employeeCredentials = {} as UserCredentials;
+          this.handleSuccess('Visitor Credentials Deleted Successfully');
+          this.visitorCredentialsList = [...this.visitorCredentialsList];
+          this.visitorCredentials = {} as UserCredentials;
           this.hideDialogs();
         }
       });
@@ -81,22 +81,22 @@ export class EmployeeCredentialsComponent {
     const deleteObservables = [];
 
     // Iterate through the selected coupons and call deleteCoupon for each
-    for (const selecteCredentials of this.selectedEmployeeCredentials) {
-      const deleteObservable = this.employeeCredentialsService.deleteEmployeeCredentials(selecteCredentials.ID!);
+    for (const selecteCredentials of this.selectedVisitorCredentials) {
+      const deleteObservable = this.visitorCredentialsService.deleteVisitorCredentials(selecteCredentials.ID!);
       deleteObservables.push(deleteObservable);
     }
 
     // Wait delete operations to complete
     forkJoin(deleteObservables).subscribe({
       next: () => {
-        this.employeeCredentialsList = this.employeeCredentialsList.filter(val => !this.selectedEmployeeCredentials.includes(val));
+        this.visitorCredentialsList = this.visitorCredentialsList.filter(val => !this.selectedVisitorCredentials.includes(val));
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
           detail: 'Coupons Deleted',
           life: 3000
         });
-        this.selectedEmployeeCredentials = [];
+        this.selectedVisitorCredentials = [];
       },
       error: () => {
         this.messageService.add({
@@ -113,8 +113,8 @@ export class EmployeeCredentialsComponent {
 
   hideDialogs() {
     this.submitted = false;
-    this.deleteEmployeeCredentialsDialog = false;
-    this.deleteEmployeeCredentialsListDialog = false;
+    this.deleteVisitorCredentialsDialog = false;
+    this.deleteVisitorCredentialsListDialog = false;
   }
 
   onGlobalFilter(table: Table, event: Event) {
