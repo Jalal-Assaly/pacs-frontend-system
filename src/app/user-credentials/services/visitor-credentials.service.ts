@@ -6,13 +6,25 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class UserCredentialsService {
-  private apiServerUrl = 'http://localhost:8081/user-credentials/visitor';
+export class VisitorCredentialsService {
+  private visitorCredentialsServerUrl = 'http://localhost:8081/user-credentials/visitor';
 
   constructor(private http: HttpClient) { }
 
   // Subscriber functions
   public getAllVisitorCredentials(): Observable<UserCredentials[]> {
-    return this.http.get<UserCredentials[]>(`${this.apiServerUrl}/list`);
+    return this.http.get<UserCredentials[]>(`${this.visitorCredentialsServerUrl}/list`);
+  }
+
+  public getVisitorCredentialsById(id: string): Observable<UserCredentials> {
+    return this.http.get<UserCredentials>(`${this.visitorCredentialsServerUrl}/find/id/${id}`);
+  }
+
+  public getVisitorCredentialsByEmail(email: string): Observable<UserCredentials> {
+    return this.http.get<UserCredentials>(`${this.visitorCredentialsServerUrl}/find/email/${email}`);
+  }
+
+  public deleteVisitorCredentials(id: string): Observable<any> {
+    return this.http.delete<void>(`${this.visitorCredentialsServerUrl}/update/${id}`);
   }
 }
