@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 
-import { UserCredentialsRoutingModule } from './user-credentials-routing.module';
-import { EmployeeCredentialsComponent } from './components/employee-credentials/employee-credentials.component';
-import { EmployeeCredentialsService } from './services/employee-credentials.service';
-import { VisitorCredentialsComponent } from './components/visitor-credentials/visitor-credentials.component';
-import { VisitorCredentialsService } from './services/visitor-credentials.service';
+import { VisitorManagementRoutingModule } from './visitor-management-routing.module';
+import { VisitorManagementComponent } from './components/visitor-management.component';
+import { VisitorManagementService } from './services/visitor-management.service';
+import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -19,12 +17,15 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
+import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 
 @NgModule({
-  declarations: [EmployeeCredentialsComponent, VisitorCredentialsComponent],
+  declarations: [VisitorManagementComponent],
   imports: [
     ButtonModule,
+    CalendarModule,
     CommonModule,
     DialogModule,
     FormsModule,
@@ -32,14 +33,15 @@ import { CommonModule } from '@angular/common';
     InputNumberModule,
     InputTextareaModule,
     InputTextModule,
+    MultiSelectModule,
     RadioButtonModule,
     RatingModule,
     RippleModule,
     TableModule,
     ToastModule,
     ToolbarModule,
-    UserCredentialsRoutingModule
+    VisitorManagementRoutingModule
   ],
-  providers: [EmployeeCredentialsService, VisitorCredentialsService]
+  providers: [VisitorManagementService]
 })
-export class UserCredentialsModule { }
+export class VisitorManagementModule { }

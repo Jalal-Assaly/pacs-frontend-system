@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,7 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule,
+    CommonModule,
+    DropdownModule,
     MenubarModule
   ],
   providers: [MessageService],
