@@ -30,7 +30,9 @@ export class AppComponent implements OnInit {
       {
         label: 'Attributes',
         icon: 'pi pi-objects-column',
-        routerLink: '/attributes',
+        items: [
+          { label: 'Access Point Attributes', icon: 'pi pi-fw pi-user', routerLink: '/attributes-management/accesspoints' }
+        ]
       },
       {
         label: 'Access Policies',

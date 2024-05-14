@@ -6,6 +6,8 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
+                        <button pButton pRipple label="New Product" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNewAccessPoint()"></button>
                         <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
                             (click)="deleteSelectedAccessPoints()"
                             [disabled]="!selectedAccessPoints || !selectedAccessPoints.length"></button>
@@ -51,6 +53,9 @@
                         </ng-container>
                         <td>
                             <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-success mr-2"
+                                        (click)="editAccessPoint(accessPoint)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
                                     (click)="deleteAccessPoint(accessPoint)"></button>
                             </div>
@@ -59,36 +64,70 @@
                 </ng-template>
             </p-table>
 
-            <!-- Delete Confirmation page for one employee credential -->
-            <!-- <p-dialog [(visible)]="deleteEmployeeCredentialsDialog" header="Confirm" [modal]="true"
-                [style]="{width:'450px'}">
-                <div class="flex align-items-center justify-content-center">
-                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                    <span *ngIf="employeeCredentials">Are you sure you want to delete employee 
-                        <b>{{employeeCredentials.FN}} {{employeeCredentials.LN}}</b>'s credentials?</span>
-                </div>
-                <ng-template pTemplate="footer">
-                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                        (click)="deleteEmployeeCredentialsDialog = false"></button>
-                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
-                        (click)="confirmDelete(employeeCredentials)"></button>
-                </ng-template>
-            </p-dialog> -->
+            <!-- Add new access point page -->
 
-            <!-- Delete Confirmation page for multiple employee credentials -->
-            <!-- <p-dialog [(visible)]="deleteEmployeeCredentialsListDialog" header="Confirm" [modal]="true"
+            <p-dialog [(visible)]="accessPointDialog" [style]="{width: '600px'}" header="Access Point Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+
+
+                <div class="field">
+                    <label for="LC">Location</label>
+                    <input type="text" pInputText id="LC" [(ngModel)]="accessPoint.LC" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPoint && accessPoint.LC === undefined}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPoint && accessPoint.LC === undefined "
+                        style="color: red;">Location is required.</small>
+                </div>
+
+                <div class="field">
+                    <label for="MOL">Maximum Occupancy Level</label>
+                    <input type="number" pInputText id="MOL" [(ngModel)]="accessPoint.MOL" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPoint && accessPoint.MOL === undefined}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPoint && accessPoint.MOL <= 0 "
+                        style="color: red;">Maximum Occupancy Level is required.</small>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideAccessPointDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveAccessPoint()"></button>
+            </ng-template>
+        </p-dialog>
+
+
+
+            <!-- Delete Confirmation page for one access point  -->
+            <p-dialog [(visible)]="deleteAccessPointDialog" header="Confirm" [modal]="true"
                 [style]="{width:'450px'}">
                 <div class="flex align-items-center justify-content-center">
                     <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                    <span>Are you sure you want to delete selected employee credentials?</span>
+                    <span *ngIf="accessPoint">Are you sure you want to delete access point 
+                        <b>{{accessPoint.LC}}</b>'s credentials?</span>
                 </div>
                 <ng-template pTemplate="footer">
                     <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                        (click)="deleteEmployeeCredentialsListDialog = false"></button>
+                        (click)="deleteAccessPointDialog = false"></button>
+                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                        (click)="confirmDelete(accessPoint)"></button>
+                </ng-template>
+            </p-dialog>
+
+            <!-- Delete Confirmation page for multiple access points -->
+            <p-dialog [(visible)]="deleteAccessPointsListDialog" header="Confirm" [modal]="true"
+                [style]="{width:'450px'}">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                    <span>Are you sure you want to delete selected access points credentials?</span>
+                </div>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                        (click)="deleteAccessPointsListDialog = false"></button>
                     <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                         (click)="confirmDeleteSelected()"></button>
                 </ng-template>
-            </p-dialog> -->
+            </p-dialog>
 
         </div>
     </div>

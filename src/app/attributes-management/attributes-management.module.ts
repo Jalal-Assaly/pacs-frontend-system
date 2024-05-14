@@ -24,8 +24,6 @@ import { RatingModule } from 'primeng/rating';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -50,9 +48,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     DropdownModule,
     RadioButtonModule,
     InputNumberModule,
-    DialogModule,
-    BrowserAnimationsModule,
-    ProgressSpinnerModule
+    DialogModule
   ],
   providers: [AccessPointsService]
 })

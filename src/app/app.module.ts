@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MenubarModule
+    MenubarModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]
