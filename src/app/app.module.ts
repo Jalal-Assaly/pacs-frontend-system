@@ -5,12 +5,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     AppRoutingModule,
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     MenubarModule
   ],
