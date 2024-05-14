@@ -8,8 +8,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EmployeeCredentialsService {
   private employeeCredentialsServerUrl = 'http://localhost:8081/user-credentials/employee';
-  private employeeRegistrationServerUrl = 'http://localhost:8084/login-registration/employee';
-  private employeeAttributesServerUrl = 'http://localhost/8082/users-attributes/employee'
 
   constructor(private http: HttpClient) { }
 
