@@ -18,10 +18,11 @@ import { RatingModule } from 'primeng/rating';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
+import { VisitorCredentialsComponent } from './components/visitor-credentials/visitor-credentials.component';
 
 
 @NgModule({
-  declarations: [EmployeeCredentialsComponent],
+  declarations: [EmployeeCredentialsComponent, VisitorCredentialsComponent],
   imports: [
     CommonModule,
     UserCredentialsRoutingModule,

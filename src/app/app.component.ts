@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  title = 'E-Commerce App';
+  title = 'PACS App';
   tabItems!: MenuItem[];
   loggedIn: boolean = false;
 
-  constructor(
-    private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
 
@@ -24,17 +22,20 @@ export class AppComponent implements OnInit {
       {
         label: 'User Credentials',
         icon: 'pi pi-fw pi-user',
-        routerLink: '/user-credentials'
+        items: [
+          { label: 'Employee Credentials', icon: 'pi pi-fw pi-user', routerLink: '/user-credentials/employees' },
+          { label: 'Visitor Credentials', icon: 'pi pi-fw pi-users', routerLink: '/user-credentials/visitors' }
+        ]
       },
       {
         label: 'Attributes',
         icon: 'pi pi-objects-column',
-        routerLink: '/products',
+        routerLink: '/attributes',
       },
       {
         label: 'Access Policies',
         icon: 'pi pi-file',
-        routerLink: '/'
+        routerLink: '/access-policies'
       },
     ];
   }
