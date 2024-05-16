@@ -5,10 +5,12 @@ export interface Visitor {
     LN: string;
     EM: string;
     DP: string;
-    TS: {
-        ST: string;
-        ET: string;
-        DW: string[];
-    };
+    TS: TS;
     CL: string;
+}
+
+interface TS {
+    ST: string;
+    ET: string;
+    DW: string[];
 }
