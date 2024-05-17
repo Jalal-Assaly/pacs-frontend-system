@@ -198,7 +198,6 @@ export class AccessPoliciesComponent {
           });
       }
 
-      this.AccessPoliciesList = [...this.AccessPoliciesList];
       this.accessPolicyDialog = false;
       this.editAccessPolicyDialog = false;
 
