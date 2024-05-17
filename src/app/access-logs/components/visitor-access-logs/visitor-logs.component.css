@@ -1,0 +1,36 @@
+.clickable-cell {
+    cursor: pointer; /* Change mouse cursor to hand */
+    transition: background-color 0.3s ease; /* Add transition for background-color change */
+}
+
+.clickable-cell:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Change background color slightly on hover */
+}
+
+.large-bold {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.section {
+    padding-bottom: 30px;
+    padding-left: 20px;
+}
+
+.sub-section {
+    padding-left: 40px;
+    padding-bottom: 20px;
+}
+
+.section-title {
+    padding-bottom: 10px;
+}
+
+.field {
+    padding-top: 10px;
+}
+
+.sub-field {
+    padding: 10px;
+    padding-left: 30px;
+}

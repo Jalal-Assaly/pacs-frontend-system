@@ -45,6 +45,14 @@ export class AppComponent implements OnInit {
         label: 'Visitor Management',
         icon: 'pi pi-id-card',
         routerLink: '/visitor-management'
+      },
+      {
+        label: 'Access Logs',
+        icon: 'pi pi-file-check',
+        items: [
+          { label: 'Employee Logs', icon: 'pi pi-fw pi-user', routerLink: '/access-logs/employees' },
+          { label: 'Visitor Logs', icon: 'pi pi-fw pi-users', routerLink: '/access-logs/visitors' }
+        ]
       }
     ];
   }

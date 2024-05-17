@@ -1,0 +1,157 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedEmployeeLogs()"
+                            [disabled]="!selectedEmployeeLogs || !selectedEmployeeLogs.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <!-- Table -->
+            <p-table #dt [value]="employeeLogs" [columns]="cols" [responsiveLayout]="'scroll'" [paginator]="true" [rows]="10"
+                [rowsPerPageOptions]="[10,20,50,100]"
+                [globalFilterFields]="['id','timestamp','accessRequest','accessPolicy']" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [selectionMode]="'multiple'" [(selection)]="selectedEmployeeLogs" dataKey="id">
+                <!-- Global Filter -->
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <!-- Header -->
+                <ng-template pTemplate="header" let-cols>
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <ng-container *ngFor="let col of cols">
+                            <th>{{ col.header }}</th>
+                        </ng-container>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <!-- Body -->
+                <ng-template pTemplate="body" let-log let-i="rowIndex">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="log"></p-tableCheckbox>
+                        </td>
+                        <td>{{ log.id }}</td>
+                        <td>{{ log.timestamp }}</td>
+                        <td (click)="openAccessRequestDialog(log.accessRequest)" class="clickable-cell">
+                            <strong>User ID:</strong> {{ log.accessRequest.UAT.ID }}<br>
+                            <strong>Access Point ID:</strong> {{ log.accessRequest.APA.ID }}
+                        </td>
+                        <td (click)="openAccessPolicyDialog(log.accessPolicy)" class="clickable-cell">
+                            <strong>ID:</strong> {{ log.accessPolicy.ID}}
+                        </td>
+                        <td [ngStyle]="{ color: log.accessResponse.decision ? 'green' : 'red' }">
+                            {{ log.accessResponse.decision ? 'Granted' : 'Denied' }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                    (click)="deleteEmployeeLogs(log)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <!-- Access Request Dialog -->
+            <p-dialog header="Access Request Details" [(visible)]="showAccessRequestDialog" [modal]="true"
+                [style]="{width: '30vw'}">
+                <div *ngIf="accessRequestData" class="dialog-content">
+                    <div class="section">
+                        <div class="section-title large-bold">User Attributes</div>
+                        <div class="sub-section">
+                            <div class="field"><strong>ID:</strong> {{ accessRequestData.UAT.ID }}</div>
+                            <div class="field"><strong>Role:</strong> {{ accessRequestData.UAT.RL }}</div>
+                            <div class="field"><strong>Department:</strong> {{ accessRequestData.UAT.DP }}</div>
+                            <div class="field"><strong>Time Schedule:</strong></div>
+                            <div class="sub-field"><strong>Start Time:</strong> {{ accessRequestData.UAT.TS.ST }}</div>
+                            <div class="sub-field"><strong>End Time:</strong> {{ accessRequestData.UAT.TS.ET }}</div>
+                            <div class="sub-field"><strong>Days of Week:</strong>
+                                {{ accessRequestData.UAT.TS.DW.join(', ') }}</div>
+                            <div class="field"><strong>Clearance Level:</strong> {{ accessRequestData.UAT.CL }}</div>
+                            <div class="field"><strong>Employment Status:</strong> {{ accessRequestData.UAT.ES }}</div>
+                        </div>
+
+                    </div>
+                    <div class="section">
+                        <div class="section-title large-bold">Access Point Attributes</div>
+                        <div class="field"><strong>ID:</strong> {{ accessRequestData.APA.ID }}</div>
+                        <div class="field"><strong>Location:</strong> {{ accessRequestData.APA.LC }}</div>
+                        <div class="field"><strong>Tamper Status:</strong> {{ accessRequestData.APA.IT }}</div>
+                        <div class="field"><strong>Occupancy Level:</strong> {{ accessRequestData.APA.OL }}</div>
+                    </div>
+                </div>
+            </p-dialog>
+
+            <!-- Access Policy Dialog -->
+            <p-dialog header="Access Policy Details" [(visible)]="showAccessPolicyDialog" [modal]="true"
+                [style]="{ width: '30vw' }">
+                <div *ngIf="accessPolicyData" class="dialog-content">
+                    <div class="section">
+                        <div class="field"><strong>Policy ID:</strong> {{ accessPolicyData.ID }}</div>
+                        <div *ngFor="let userAttribute of accessPolicyData.UAS" class="sub-section">
+                            <div class="field"><strong>Allowed User Attributes ({{ userAttribute.ADP }}):</strong></div>
+                            <div class="sub-field"><strong>Allowed Roles:</strong> {{ userAttribute.ARL.join(', ') }}
+                            </div>
+                            <div class="sub-field"><strong>Allowed Clearance Levels:</strong> {{
+                                userAttribute.ACL.join(', ') }}</div>
+                            <div class="sub-field"><strong>Allowed Employment Statuses:</strong> {{
+                                userAttribute.AES.join(', ') }}</div>
+                        </div>
+                        <div class="sub-section">
+                            <div class="field"><strong>Allowed Access Point Attributes:</strong></div>
+                            <div class="sub-field"><strong>Allowed Location:</strong> {{ accessPolicyData.APA.ALC }}
+                            </div>
+                            <div class="sub-field"><strong>Maximum Occupancy Level:</strong> {{ accessPolicyData.APA.AOL
+                                }}</div>
+                        </div>
+                    </div>
+                </div>
+            </p-dialog>
+
+            <!-- Delete Confirmation page for one employee credential -->
+            <p-dialog [(visible)]="deleteEmployeeLogsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                    <span *ngIf="employeeLogs">Are you sure you want to delete employee this access policy</span>
+                </div>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                        (click)="deleteEmployeeLogsDialog = false"></button>
+                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                        (click)="confirmDelete(employeeLog)"></button>
+                </ng-template>
+            </p-dialog>
+
+            <!-- Delete Confirmation page for multiple employee credentials -->
+            <p-dialog [(visible)]="deleteEmployeeLogsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                    <span>Are you sure you want to delete selected employee credentials?</span>
+                </div>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                        (click)="deleteEmployeeLogsDialog = false"></button>
+                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                        (click)="confirmDeleteSelected()"></button>
+                </ng-template>
+            </p-dialog>
+        </div>
+    </div>
+</div>
