@@ -6,7 +6,7 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="New Product" icon="pi pi-plus" class="p-button-success mr-2"
+                        <button pButton pRipple label="New Access Point" icon="pi pi-plus" class="p-button-success mr-2"
                             (click)="openNewAccessPoint()"></button>
                         <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
                             (click)="deleteSelectedAccessPoints()"
@@ -16,8 +16,8 @@
             </p-toolbar>
 
             <p-table #dt [value]="AccessPointsList" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-                [globalFilterFields]="['ID','LC','IT','OL','MOL']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
-                [showCurrentPageReport]="true"
+                [globalFilterFields]="['ID','LC','IT','OL','MOL']" [paginator]="true" 
+                [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [(selection)]="selectedAccessPoints" selectionMode="multiple" [rowHover]="true" dataKey="ID">
                 <ng-template pTemplate="caption">
@@ -47,10 +47,16 @@
                             <p-tableCheckbox [value]="accessPoint"></p-tableCheckbox>
                         </td>
                         <ng-container *ngFor="let col of cols">
-                            <td>
+                            <td *ngIf="col.field !== 'crowdingStatus'">
                                 {{ accessPoint[col.field] }}
                             </td>
+                            <td *ngIf="col.field === 'crowdingStatus'">
+                                <span [ngStyle]="{'color': calculateCrowdingStatus(accessPoint.OL, accessPoint.MOL).color}">
+                                    {{ calculateCrowdingStatus(accessPoint.OL, accessPoint.MOL).status }}
+                                </span>
+                            </td>
                         </ng-container>
+                        
                         <td>
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil"
@@ -74,14 +80,14 @@
                 <div class="field">
                     <label for="LC">Location</label>
                     <input type="text" pInputText id="LC" [(ngModel)]="accessPoint.LC" required autofocus
-                        [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPoint && accessPoint.LC === undefined}" />
+                        [disabled]="isEditMode" [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPoint && accessPoint.LC === undefined}" />
                     <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPoint && accessPoint.LC === undefined "
                         style="color: red;">Location is required.</small>
                 </div>
 
                 <div class="field">
                     <label for="MOL">Maximum Occupancy Level</label>
-                    <input type="number" pInputText id="MOL" [(ngModel)]="accessPoint.MOL" required autofocus
+                    <input type="number" pInputText id="MOL" [(ngModel)]="accessPoint.MOL" required autofocus min="1"
                         [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPoint && accessPoint.MOL === undefined}" />
                     <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPoint && accessPoint.MOL <= 0 "
                         style="color: red;">Maximum Occupancy Level is required.</small>

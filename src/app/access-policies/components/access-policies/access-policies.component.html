@@ -1,0 +1,387 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New Access Policy" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNewAccessPolicy()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedAccessPolicies()"
+                            [disabled]="!selectedAccessPolicies || !selectedAccessPolicies.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="AccessPoliciesList" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['ID','APA','UAS']" [paginator]="true"
+                [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedAccessPolicies" selectionMode="multiple" [rowHover]="true" dataKey="ID">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-cols>
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <ng-container *ngFor="let col of cols">
+                            <th>{{ col.header }}</th>
+                        </ng-container>
+                        <th></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-accessPolicy let-i="rowIndex">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="accessPolicy"></p-tableCheckbox>
+                        </td>
+                        <ng-container *ngFor="let col of cols">
+                            <ng-container *ngIf="col.field === 'APA'; else checkUASField">
+                                <td>
+                                  <!-- Template for APA -->
+                                  Allowed Location: {{ accessPolicy.APA.ALC }}<br><br>
+                                  Allowed Occupancy Level: {{ accessPolicy.APA.AOL }}<br>
+                                </td>
+                              </ng-container>
+                              
+                              <ng-template #checkUASField>
+                                <ng-container *ngIf="col.field === 'UAS'; else defaultField">
+                                  <td>
+                                    <!-- Template for UAS -->
+                                    <ul>
+                                        <li *ngFor="let userAttr of accessPolicy['UAS']">
+                                        <span style="font-weight: bold;">Department:</span> {{ userAttr.ADP }}<br>
+                                          Allowed Roles: {{ userAttr.ARL }}<br>
+                                          Allowed Clearance Levels: {{ userAttr.ACL }}<br>
+                                          Allowed Employment Status: {{ userAttr.AES }}<br>
+                                        </li>
+                                    </ul>
+                                  </td>
+                                </ng-container>
+                              </ng-template>
+                              
+                              <ng-template #defaultField>
+                                <td>
+                                  <!-- Default template -->
+                                  {{ accessPolicy[col.field] }}
+                                </td>
+                              </ng-template>
+                              
+                        </ng-container>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editAccessPolicy(accessPolicy)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                    (click)="deleteAccessPolicy(accessPolicy)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+
+            <!-- Shows access policy dialog for add access policy -->
+            <p-dialog [(visible)]="accessPolicyDialog" [style]="{width: '600px'}" header="Access Policy Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <!-- Add the location field -->   
+                <div class="field">
+                    <label for="ALC">Location</label>
+                    <input type="text" pInputText id="ALCN" [(ngModel)]="accessPolicy.APA.ALC" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPolicy && accessPolicy.APA.ALC === undefined}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPolicy && accessPolicy.APA.ALC === undefined "
+                        style="color: red;">Location is required.</small>
+                </div>
+
+                <!-- Add the Maximum Occupancy Level field -->   
+                <div class="field">
+                    <label for="AOL">Maximum Occupancy Level</label>
+                    <input type="number" pInputText id="AOL" [(ngModel)]="accessPolicy.APA.AOL" required autofocus
+                        min="1"
+                        [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPolicy && accessPolicy.APA.AOL === undefined}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPolicy && accessPolicy.APA.AOL <= 0 "
+                        style="color: red;">Maximum Occupancy Level is required.</small>
+                </div>
+                
+                <!-- Just to show the the department that have user attributes until now -->
+                <div>
+                    <td>
+                        <!-- Template for UAS -->
+                        <ul>
+                            <li *ngFor="let userAttr of accessPolicy['UAS']">
+                              Department: {{ userAttr.ADP }}<br>
+                            </li>
+                        </ul>
+                    </td>
+                </div>
+
+                <!-- Add the User Attributes to the list field -->   
+                <label>Add User Attributes</label>
+                <td>
+                    <div class="flex">
+                        <button pButton pRipple label="Add" icon="pi pi-plus" class="p-button-text"
+                        (click)="openNewUserAttributes()"></button>
+                    </div>
+                </td>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideAccessPolicyDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveAccessPolicy()"></button>
+            </ng-template>
+        </p-dialog>
+
+
+        <!-- Shows access policy dialog for editing access policy -->
+        <p-dialog [(visible)]="editAccessPolicyDialog" [style]="{width: '650px', height:'700px'}" header="Edit Access Policy" [modal]="true"
+        class="p-fluid">
+        <ng-template pTemplate="content">
+
+            <!-- Add the location field -->   
+            <div class="field">
+                <label for="ALC">Location</label>
+                <input type="text" pInputText id="ALC" [(ngModel)]="accessPolicy.APA.ALC" required autofocus
+                [disabled]="isEditMode && !newUserAttributesExistingPolicy" [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPolicy && accessPolicy.APA.ALC === undefined}" />
+                <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPolicy && accessPolicy.APA.ALC === undefined "
+                    style="color: red;">Location is required.</small>
+            </div>
+
+            <!-- Add the Maximum Occupancy Level field -->   
+            <div class="field">
+                <label for="AOL">Maximum Occupancy Level</label>
+                <input type="number" pInputText id="AOL" [(ngModel)]="accessPolicy.APA.AOL" required autofocus
+                    min="1"
+                    [ngClass]="{'ng-invalid ng-dirty' : submittedAccessPolicy && accessPolicy.APA.AOL === undefined}" />
+                <small class="ng-dirty ng-invalid" *ngIf="submittedAccessPolicy && accessPolicy.APA.AOL <= 0 "
+                    style="color: red;">Maximum Occupancy Level is required.</small>
+            </div>
+
+            <!-- Departments options to chose the department want to edit -->   
+            <div class="field">
+                <label>Edit User Attributes for Exsisting Department</label><br>
+                <p-dropdown [(ngModel)]="selectedUASDepartment" optionLabel="ADP"
+                                [options]="userAttributesOptions" placeholder="Select Department">
+                </p-dropdown>
+                <td>
+                    <div class="field" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1; display: flex; gap: 60px;">
+                            <button pButton pRipple label="Add Attributes" icon="pi pi-plus" class="p-button-text"
+                                    style="min-width: 150px;" [disabled]="!selectedUASDepartment || !selectedUASDepartment.ADP" 
+                                    (click)="openNewUserAttributes()"></button>
+                            <button pButton pRipple label="Delete Attributes" icon="pi pi-minus" class="p-button-text"
+                                    style="min-width: 150px;" [disabled]="!selectedUASDepartment || !selectedUASDepartment.ADP" 
+                                    (click)="openNewDeleteUserAttributes()"></button>
+                        </div>
+                        <button pButton pRipple label="Delete Department" icon="pi pi-minus" class="p-button-text"
+                                style="min-width: 150px; margin-left: auto;" [disabled]="!selectedUASDepartment || !selectedUASDepartment.ADP" 
+                                (click)="deleteDepartmentFromUserAttributes()"></button>
+                    </div>
+                </td>
+                
+            </div>
+
+            <!-- Add the User Attributes to the list field -->   
+            <label>Add New User Attributes for New Department</label>
+            <td>
+                <div class="flex">
+                    <button pButton pRipple label="Add" icon="pi pi-plus" class="p-button-text"
+                    (click)="openNewUserAttributesExistingPolicy()"></button>
+                </div>
+            </td>
+
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideEditAccessPolicyDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="saveAccessPolicy()"></button>
+        </ng-template>
+        </p-dialog>
+        
+        <!-- User attributes for add Dialog -->
+        <p-dialog [(visible)]="userAttributesAddDialog" [style]="{width: '500px'}" header="User Attributes Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                
+                <!-- Add the Department field -->   
+                <div class="field">
+                    <label for="ADP">Department</label>
+                    <input type="text" pInputText id="ADP" [(ngModel)]="allowedUserAttributes.ADP" required autofocus
+                    [disabled]="isEditMode && !newUserAttributesExistingPolicy" [ngClass]="{'ng-invalid ng-dirty' : submittedUserAttributes && allowedUserAttributes.ADP === ''}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submittedUserAttributes && allowedUserAttributes.ADP === '' "
+                        style="color: red;">Department is required.</small>
+                </div>
+
+                <!-- Add the Role field with add button to push in the list --> 
+                <div class="field">
+                    <label for="ARL">Role</label>
+                    <input type="text" pInputText id="ARL" [(ngModel)]="allowedRole" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : (submittedUserAttributes && allowedRole === '') || (submittedUserRole && allowedRole === '')}" />
+                    <small class="ng-dirty ng-invalid" *ngIf=" (submittedUserAttributes && allowedRole === '') || (submittedUserRole && allowedRole === '') "
+                        style="color: red;">Role is required.</small>
+                </div>
+                <td>
+                    <div class="flex">
+                        <button pButton pRipple label="Add" icon="pi pi-plus" class="p-button-text"
+                            (click)="addRoleToUserAttributes()"></button>
+                    </div>
+                </td>
+                
+
+                <!-- Add the Clearance Level field with add button to push in the list --> 
+                <div class="field">
+                    <label for="ACL">Clearance Level</label>
+                    <input type="text" pInputText id="ACL" [(ngModel)]="allowedClearanceLevel" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : (submittedUserAttributes && allowedClearanceLevel === '') || (submittedUserClearanceLevel && allowedClearanceLevel === '')}" />
+                    <small class="ng-dirty ng-invalid" *ngIf=" (submittedUserAttributes && allowedClearanceLevel === '') || (submittedUserClearanceLevel && allowedClearanceLevel === '') "
+                        style="color: red;">Clearance Level is required.</small>
+                </div>
+                <td>
+                    <div class="flex">
+                        <button pButton pRipple label="Add" icon="pi pi-plus" class="p-button-text"
+                            (click)="addClearanceLevelToUserAttributes()"></button>
+                    </div>
+                </td>
+                
+
+                <!-- Add the Employment Status field with add button to push in the list --> 
+                <div class="field">
+                    <label for="AES">Employment Status</label>
+                    <input type="text" pInputText id="AES" [(ngModel)]="allowedEmploymentStatus" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : (submittedUserAttributes && allowedEmploymentStatus === '') ||  (submittedUserEmploymentStatus && allowedEmploymentStatus === '')}" />
+                    <small class="ng-dirty ng-invalid" *ngIf=" (submittedUserAttributes && allowedEmploymentStatus === '') ||  (submittedUserEmploymentStatus && allowedEmploymentStatus === '')  "
+                        style="color: red;">Employment Status is required.</small>
+                </div>
+                <td>
+                    <div class="flex">
+                        <button pButton pRipple label="Add" icon="pi pi-plus" class="p-button-text"
+                            (click)="addEmploymentStatusToUserAttributes()"></button>
+                    </div>
+                </td>
+                
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideUserAttributesAddDialog()"></button>
+                <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text"
+                    (click)="addUserAttributes()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- User attributes for delete Dialog -->
+        <p-dialog [(visible)]="userAttributesDeleteDialog" [style]="{width: '500px'}" header="User Attributes Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                
+                <!-- Add the Department field -->   
+                <div class="field">
+                    <label for="ADP">Department</label>
+                    <input type="text" pInputText id="ADP" [(ngModel)]="selectedUASDepartment.ADP" required autofocus
+                    [disabled]="isEditMode && !newUserAttributesExistingPolicy"/>
+                </div>
+
+                <!-- Add the Role field with Delete button to deleted from the list --> 
+                <div class="field">
+                    <label for="ARL">Role</label>
+                    <p-dropdown [(ngModel)]="allowedRole" 
+                                [options]="selectedUASDepartment.ARL" placeholder="Select Role">
+                    </p-dropdown>
+                    <td>
+                        <div class="flex">
+                            <button pButton pRipple label="Delete" icon="pi pi-minus" class="p-button-text"
+                            [disabled]="!allowedRole" (click)="deleteRoleFromUserAttributes()"></button>
+                        </div>
+                    </td>
+                </div>
+
+                <!-- Add the Clearance Level field with Delete button to deleted from the list --> 
+                <div class="field">
+                    <label for="ACL">Clearance Level</label>
+                    <p-dropdown [(ngModel)]="allowedClearanceLevel" 
+                                [options]="selectedUASDepartment.ACL" placeholder="Select Clearance Level">
+                    </p-dropdown>
+                    <td>
+                        <div class="flex">
+                            <button pButton pRipple label="Delete" icon="pi pi-minus" class="p-button-text"
+                            [disabled]="!allowedClearanceLevel" (click)="deleteClearanceLevelFromUserAttributes()"></button>
+                        </div>
+                    </td>
+                </div>
+
+                <!-- Add the Employment Status field with Delete button to deleted from the list --> 
+                <div class="field">
+                    <label for="AES">Employment Status</label>
+                    <p-dropdown [(ngModel)]="allowedEmploymentStatus" 
+                                [options]="selectedUASDepartment.AES" placeholder="Select Employment Status">
+                    </p-dropdown>
+                    <td>
+                        <div class="flex">
+                            <button pButton pRipple label="Delete" icon="pi pi-minus" class="p-button-text"
+                            [disabled]="!allowedEmploymentStatus" (click)="deleteEmploymentStatusFromUserAttributes()"></button>
+                        </div>
+                    </td>
+                </div>
+                
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideUserAttributesDeleteDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveDeletedUserAttributes()"></button>
+            </ng-template>
+        </p-dialog>
+
+
+
+        <!-- Delete Confirmation page for one visitor -->
+        <p-dialog [(visible)]="deleteAccessPolicyDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="accessPolicy">Are you sure you want to delete access policy for location
+                    <b>{{accessPolicy.APA.ALC}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteAccessPolicyDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete(accessPolicy)"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- Delete Confirmation page for multiple visitors -->
+        <p-dialog [(visible)]="deleteAccessPoliciesListDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected access policies ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteAccessPoliciesListDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+
+        </div>
+    </div>
+</div>

@@ -31,12 +31,14 @@ export class AppComponent implements OnInit {
         label: 'Attributes',
         icon: 'pi pi-objects-column',
         items: [
-          { label: 'Access Point Attributes', icon: 'pi pi-fw pi-user', routerLink: '/attributes-management/accesspoints' }
+          { label: 'Access Points', icon: 'pi pi-fw pi-sign-in', routerLink: '/attributes-management/access-points' },
+          { label: 'Employees', icon: 'pi pi-fw pi-user', routerLink: '/attributes-management/employees' },
+          { label: 'Visitors', icon: 'pi pi-fw pi-users', routerLink: '/attributes-management/visitors' },
         ]
       },
       {
         label: 'Access Policies',
-        icon: 'pi pi-file',
+        icon: 'pi pi-lock',
         routerLink: '/access-policies'
       },
       {

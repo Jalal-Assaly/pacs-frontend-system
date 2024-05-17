@@ -24,6 +24,8 @@ export class AccessPointsComponent {
 
   submittedAccessPoint: boolean = false;
 
+  isEditMode: boolean = false;
+
   AccessPointsList!: AccessPoint[];
 
   accessPoint!: AccessPoint;
@@ -54,7 +56,8 @@ export class AccessPointsComponent {
       { field: 'LC', header: 'Location' },
       { field: 'IT', header: 'Tamper Status' },
       { field: 'OL', header: 'Current Occupancy Level' },
-      { field: 'MOL', header: 'Maximum Occupancy Level' }
+      { field: 'MOL', header: 'Maximum Occupancy Level' },
+      { field: 'crowdingStatus', header: 'Crowding Status' }
     ];
   }
 
@@ -62,6 +65,7 @@ export class AccessPointsComponent {
     this.submittedAccessPoint = false;
     this.accessPointDialog = true;
     this.accessPoint = {} as AccessPoint;
+    this.isEditMode = false;
 }
 
 saveAccessPoint() {
@@ -103,6 +107,7 @@ private validateAccessPoint(accessPoint: AccessPoint): boolean {
 editAccessPoint(accessPoint: AccessPoint) {
   this.accessPoint = { ...accessPoint };
   this.accessPointDialog = true;
+  this.isEditMode = true;
 }
 
 findIndexById(id: String): number {
@@ -168,6 +173,14 @@ findIndexById(id: String): number {
     });
 
     this.hideDialogs();
+  }
+
+  calculateCrowdingStatus(OL: number, MOL: number): {status: string, color: string} {
+    if (OL >= 0.8 * MOL) {
+      return { status: 'Crowded', color: 'red' };
+    } else {
+      return { status: 'Not Crowded', color: 'green' };
+    }
   }
 
   hideAccessPointDialog() {
