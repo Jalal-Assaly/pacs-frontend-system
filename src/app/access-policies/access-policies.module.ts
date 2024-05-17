@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AttributesManagementRoutingModule } from './attributes-management-routing.module';
+import { AccessPoliciesRoutingModule } from './access-policies-routing.module';
 
-import { AccessPointsComponent } from './components/access-points/access-points.component';
-import { EmployeesComponent } from './components/employees/employees.component';
-import { VisitorsComponent } from './components/visitors/visitors.component';
+import { AccessPoliciesComponent } from './components/access-policies/access-policies.component';
 
-import { AccessPointsService } from './services/access-points.service';
-import { EmployeesService } from './services/employees.service';
-import { VisitorsService } from './services/visitors.service';
-
+import { AccessPoliciesService } from './services/access-policies.service';
 
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -30,15 +25,12 @@ import { DialogModule } from 'primeng/dialog';
 
 
 
+
 @NgModule({
-  declarations: [
-    AccessPointsComponent,
-    EmployeesComponent,
-    VisitorsComponent
-  ],
+  declarations: [AccessPoliciesComponent],
   imports: [
     CommonModule,
-    AttributesManagementRoutingModule,
+    AccessPoliciesRoutingModule,
     TableModule,
     FileUploadModule,
     FormsModule,
@@ -55,6 +47,6 @@ import { DialogModule } from 'primeng/dialog';
     DialogModule,
     HttpClientModule
   ],
-  providers: [AccessPointsService, EmployeesService, VisitorsService]
+  providers: [AccessPoliciesService]
 })
-export class AttributesManagementModule { }
+export class AccessPoliciesModule { }
