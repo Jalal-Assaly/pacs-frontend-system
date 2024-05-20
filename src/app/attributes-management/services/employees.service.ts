@@ -7,7 +7,7 @@ import { Employee } from '../models/employees.model';
   providedIn: 'root'
 })
 export class EmployeesService {
-  private employeesServerUrl = 'http://localhost:8082/users-attributes/employee';
+  private employeesServerUrl = 'http://localhost:8082/attributes-management/users-attributes/employee';
 
   constructor(private http: HttpClient) { }
 

@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AccessPointsService {
-  private accesspointsServerUrl = 'http://localhost:8082/access-points-attributes';
+  private accesspointsServerUrl = 'http://localhost:8082/attributes-management/access-points-attributes';
 
   constructor(private http: HttpClient) { }
 
