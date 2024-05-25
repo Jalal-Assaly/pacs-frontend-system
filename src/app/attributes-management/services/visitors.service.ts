@@ -8,7 +8,7 @@ import { Employee } from '../models/employees.model';
   providedIn: 'root'
 })
 export class VisitorsService {
-  private visitorsServerUrl = 'http://localhost:8082/attributes-management/users-attributes/visitor';
+  private visitorsServerUrl = 'https://192.168.1.38:8082/attributes-management/users-attributes/visitor';
 
   constructor(private http: HttpClient) { }
 
