@@ -8,7 +8,7 @@ import { Visitor } from '../models/visitor';
 })
 export class VisitorManagementService {
 
-  private visitorManagementServerUrl = 'http://192.168.1.38:8087/visitor-management';
+  private visitorManagementServerUrl = 'http://192.168.1.38:8088/visitor-management';
 
   constructor(private http: HttpClient) { }
 
