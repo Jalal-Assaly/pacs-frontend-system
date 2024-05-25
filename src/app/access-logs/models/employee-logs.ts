@@ -15,7 +15,6 @@ export interface EmployeeLog {
             ES: string;
         };
         APA: {
-            ID: string;
             LC: string;
             IT: string;
             OL: number;
