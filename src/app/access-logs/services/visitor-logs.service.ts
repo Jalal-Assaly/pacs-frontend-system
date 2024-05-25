@@ -7,7 +7,7 @@ import { VisitorLog } from '../models/visitor-logs';
   providedIn: 'root'
 })
 export class VisitorLogsService {
-  private visitorLogsServerUrl = 'http://localhost:8086/access-control';
+  private visitorLogsServerUrl = 'https://192.168.1.38:8088/access-control';
 
   constructor(private http: HttpClient) { }
 

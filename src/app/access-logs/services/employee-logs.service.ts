@@ -7,7 +7,7 @@ import { EmployeeLog } from '../models/employee-logs';
   providedIn: 'root'
 })
 export class EmployeeLogsService {
-  private employeeLogsServerUrl = 'http://localhost:8086/access-control';
+  private employeeLogsServerUrl = 'https://192.168.1.38:8088/access-control';
 
   constructor(private http: HttpClient) { }
 
