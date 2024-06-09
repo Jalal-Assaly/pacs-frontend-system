@@ -61,7 +61,7 @@ export class EmployeeLogsComponent {
   }
 
   deleteEmployeeLogs(employeeLog: EmployeeLog) {
-    this.deleteEmployeeLogsDialog = true;
+    this.deleteEmployeeLogDialog = true;
     this.employeeLog = { ...employeeLog };
   }
 

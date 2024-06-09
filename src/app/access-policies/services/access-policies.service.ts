@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AccessPoliciesService {
-  private accesspoliciesServerUrl = 'https://192.168.1.38:8088/access-policies';
+  private accesspoliciesServerUrl = 'https://pacserverpi.local:8088/access-policies';
 
   constructor(private http: HttpClient) { }
 

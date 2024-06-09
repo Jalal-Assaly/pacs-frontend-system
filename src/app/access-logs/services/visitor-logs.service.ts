@@ -7,7 +7,7 @@ import { VisitorLog } from '../models/visitor-logs';
   providedIn: 'root'
 })
 export class VisitorLogsService {
-  private visitorLogsServerUrl = 'https://192.168.1.38:8088/access-control';
+  private visitorLogsServerUrl = 'https://pacserverpi.local:8088/access-control';
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +17,6 @@ export class VisitorLogsService {
   }
 
   public deleteVisitorLogs(id: string): Observable<any> {
-    return this.http.delete<void>(`${this.visitorLogsServerUrl}/delete/${id}`);
+    return this.http.delete<void>(`${this.visitorLogsServerUrl}/delete/visitor/log/${id}`);
   }
 }

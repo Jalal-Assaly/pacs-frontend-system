@@ -7,7 +7,7 @@ import { EmployeeLog } from '../models/employee-logs';
   providedIn: 'root'
 })
 export class EmployeeLogsService {
-  private employeeLogsServerUrl = 'https://192.168.1.38:8088/access-control';
+  private employeeLogsServerUrl = 'https://pacserverpi.local:8088/access-control';
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +17,6 @@ export class EmployeeLogsService {
   }
 
   public deleteEmployeeLogs(id: string): Observable<any> {
-    return this.http.delete<void>(`${this.employeeLogsServerUrl}/delete/${id}`);
+    return this.http.delete<void>(`${this.employeeLogsServerUrl}/delete/employee/log/${id}`);
   }
 }

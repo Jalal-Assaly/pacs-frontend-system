@@ -7,7 +7,7 @@ import { Employee } from '../models/employees.model';
   providedIn: 'root'
 })
 export class EmployeesService {
-  private employeesServerUrl = 'https://192.168.1.38:8088/attributes-management/users-attributes/employee';
+  private employeesServerUrl = 'https://pacserverpi.local:8088/attributes-management/users-attributes/employee';
 
   constructor(private http: HttpClient) { }
 

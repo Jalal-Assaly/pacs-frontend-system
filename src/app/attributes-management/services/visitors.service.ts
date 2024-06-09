@@ -8,7 +8,7 @@ import { Employee } from '../models/employees.model';
   providedIn: 'root'
 })
 export class VisitorsService {
-  private visitorsServerUrl = 'https://192.168.1.38:8088/attributes-management/users-attributes/visitor';
+  private visitorsServerUrl = 'https://pacserverpi.local:8088/attributes-management/users-attributes/visitor';
 
   constructor(private http: HttpClient) { }
 

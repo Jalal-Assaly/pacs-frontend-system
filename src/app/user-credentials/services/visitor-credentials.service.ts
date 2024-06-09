@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class VisitorCredentialsService {
-  private visitorCredentialsServerUrl = 'https://192.168.1.38:8088/user-credentials/visitor';
+  private visitorCredentialsServerUrl = 'https://pacserverpi.local:8088/user-credentials/visitor';
 
   constructor(private http: HttpClient) { }
 
@@ -25,6 +25,6 @@ export class VisitorCredentialsService {
   }
 
   public deleteVisitorCredentials(id: string): Observable<any> {
-    return this.http.delete<void>(`${this.visitorCredentialsServerUrl}/update/${id}`);
+    return this.http.delete<void>(`${this.visitorCredentialsServerUrl}/delete/${id}`);
   }
 }

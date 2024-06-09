@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AccessPointsService {
-  private accesspointsServerUrl = 'https://192.168.1.38:8088/attributes-management/access-points-attributes';
+  private accesspointsServerUrl = 'https://pacserverpi.local:8088/attributes-management/access-points-attributes';
 
   constructor(private http: HttpClient) { }
 

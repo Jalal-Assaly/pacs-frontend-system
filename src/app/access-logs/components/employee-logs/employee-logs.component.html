@@ -125,25 +125,25 @@
                 </div>
             </p-dialog>
 
-            <!-- Delete Confirmation page for one employee credential -->
-            <p-dialog [(visible)]="deleteEmployeeLogsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <!-- Delete Confirmation page for one employee logs -->
+            <p-dialog [(visible)]="deleteEmployeeLogDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
                 <div class="flex align-items-center justify-content-center">
                     <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                    <span *ngIf="employeeLogs">Are you sure you want to delete employee this access policy</span>
+                    <span *ngIf="employeeLog">Are you sure you want to delete employee log <b>{{employeeLog.id}}</b>?</span>
                 </div>
                 <ng-template pTemplate="footer">
                     <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                        (click)="deleteEmployeeLogsDialog = false"></button>
+                        (click)="deleteEmployeeLogDialog = false"></button>
                     <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                         (click)="confirmDelete(employeeLog)"></button>
                 </ng-template>
             </p-dialog>
 
-            <!-- Delete Confirmation page for multiple employee credentials -->
+            <!-- Delete Confirmation page for multiple employee logs -->
             <p-dialog [(visible)]="deleteEmployeeLogsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
                 <div class="flex align-items-center justify-content-center">
                     <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                    <span>Are you sure you want to delete selected employee credentials?</span>
+                    <span>Are you sure you want to delete selected employee logs?</span>
                 </div>
                 <ng-template pTemplate="footer">
                     <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"

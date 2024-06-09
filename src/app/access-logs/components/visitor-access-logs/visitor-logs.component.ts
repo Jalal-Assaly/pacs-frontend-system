@@ -61,7 +61,7 @@ export class VisitorLogsComponent {
   }
 
   deleteVisitorLogs(visitorLog: VisitorLog) {
-    this.deleteVisitorLogsDialog = true;
+    this.deleteVisitorLogDialog = true;
     this.visitorLog = { ...visitorLog };
   }
 
